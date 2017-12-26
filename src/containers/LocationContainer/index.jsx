@@ -33,10 +33,13 @@ export default class LocationContainer extends Component {
 
   saveLocation({ coords }){
     let { latitude, longitude } = coords
-    let position = JSON.stringify([latitude, longitude])
-
-    localStorage.setItem('location', position)
-    this.setState( {position: JSON.parse(position)} )
+    let position = {
+      lat: latitude,
+      lng: longitude
+    }
+    console.log(position)
+    localStorage.setItem('location', JSON.stringify(position))
+    this.setState( {position: position} )
   }
   render(){
     const { position } = this.state
