@@ -21,15 +21,13 @@ export default class SearchContainer extends Component {
     componentWillMount(){
       const client = algoliasearch('O5LZ0PKJ3M', '4b13c1dbc657b715100da47889eb9e8f')
       const { location } = this.props
-      let geo = `${location.lat}, ${location.lng}`
-
       this._helper = algoliasearchHelper(client, 'Restaurants', {
-        aroundLatLng: geo
+        aroundLatLng: location
       })
       this._helper.on('result', this.updateResults)
       this._helper.search()
     }
-
+ 
     updateResults(results){
       console.log(results)
       this.setState( {results: results.hits} )

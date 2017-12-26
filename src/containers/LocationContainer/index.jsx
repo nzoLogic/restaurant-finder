@@ -5,7 +5,7 @@ export default class LocationContainer extends Component {
   constructor(props){
     super(props)
     this.state = {
-      position: []
+      geo: ''
     }
     this.saveLocation = this.saveLocation.bind(this)
   }
@@ -13,7 +13,7 @@ export default class LocationContainer extends Component {
   componentWillMount(){
     let location = localStorage.getItem('location')
     if( location ){
-      this.setState( {position: JSON.parse(location)} )
+      this.setState( {geo: location} )
     } else {
       this.checkNavigation()
     }
@@ -33,19 +33,19 @@ export default class LocationContainer extends Component {
 
   saveLocation({ coords }){
     let { latitude, longitude } = coords
-    let position = {
-      lat: latitude,
-      lng: longitude
-    }
-    console.log(position)
-    localStorage.setItem('location', JSON.stringify(position))
-    this.setState( {position: position} )
+    let geo = `${latitude}, ${longitude}`
+
+    console.log('Location geo', geo)
+    localStorage.setItem('location', geo)
+    this.setState( {geo: geo} )
   }
   render(){
-    const { position } = this.state
+    const { geo } = this.state
     return(
       <div>
-        <SearchContainer location={position} />
+        {
+          geo && <SearchContainer location={geo} />
+        }
       </div>
     )
   }
