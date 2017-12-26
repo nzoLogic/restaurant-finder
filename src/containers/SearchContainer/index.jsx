@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import algoliasearch from 'algoliasearch'
 import algoliasearchHelper from 'algoliasearch-helper'
 import SearchComponent from '../../components/SearchComponent'
+import Results from '../../components/Results'
+import { List } from 'semantic-ui-react'
 
 export default class SearchContainer extends Component {
   constructor(props){
@@ -19,12 +21,11 @@ export default class SearchContainer extends Component {
     componentWillMount(){
       const client = algoliasearch('O5LZ0PKJ3M', '4b13c1dbc657b715100da47889eb9e8f')
       const { location } = this.props
-      let req = `${location.lat}, ${location.lng}`
-      console.log(req)
+      let geo = `${location.lat}, ${location.lng}`
+
       this._helper = algoliasearchHelper(client, 'Restaurants', {
-        aroundLatLng: req
+        aroundLatLng: geo
       })
-      console.log(this._helper)
       this._helper.on('result', this.updateResults)
       this._helper.search()
     }
@@ -36,12 +37,21 @@ export default class SearchContainer extends Component {
 
     handleInputChange({ target }){
       console.log(target.value)
-      this._helper.search()
+      this._helper.setQuery(target.value).search()
     }
   render(){
+    const { results } = this.state
+
     return(
       <div>
         <SearchComponent action={this.handleInputChange} />
+        <List>
+          { results.map(r => (
+            <List.Item key={r.objectID}>
+              <Results { ...r } />
+            </List.Item>
+          )) }
+        </List>
       </div>
     )
   }
