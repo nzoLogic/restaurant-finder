@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import SearchContainer from '../SearchContainer'
 
 export default class LocationContainer extends Component {
   constructor(props){
@@ -38,9 +39,10 @@ export default class LocationContainer extends Component {
     this.setState( {position: JSON.parse(position)} )
   }
   render(){
+    const { position } = this.state
     return(
       <div>
-        { this.props.children }
+        <SearchContainer location={position} />
       </div>
     )
   }
