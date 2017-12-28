@@ -15,7 +15,8 @@ export default class SearchContainer extends Component {
 
     this.state = {
       results: [],
-      facets: [],
+      foodType: [],
+      starsCount: [],
       query: ''
     }
   }
@@ -25,15 +26,19 @@ export default class SearchContainer extends Component {
     const { location } = this.props
     this._helper = algoliasearchHelper(client, 'Restaurants', {
       aroundLatLng: location,
-      facets: ['food_type']
+      facets: ['food_type', 'stars_count']
     })
     this._helper.on('result', this.updateResults)
+    console.log('HELPER ---> ', this._helper)
     this._helper.search()
   }
 
   updateResults(results){
     console.log(results)
-    this.setState( {results: results.hits, facets: results.getFacetValues('food_type')} )
+    const foodType = results.getFacetValues('food_type')
+    const starsCount = results.getFacetValues('stars_count')
+    console.log(foodType, starsCount)
+    this.setState( {results: results.hits, foodType, starsCount} )
   }
 
   handleInputChange({ target }){
@@ -45,7 +50,7 @@ export default class SearchContainer extends Component {
     this._helper.toggleRefinement(name, value).search()
   }
   render(){
-    const { results, facets } = this.state
+    const { results, foodType, starsCount } = this.state
 
     return(
       <Grid container>
@@ -54,7 +59,7 @@ export default class SearchContainer extends Component {
         </Grid.Row>
         <Grid.Row columns={12} divided>
           <Grid.Column width={4}>
-            <FacetContainer facets={facets} handleFacet={this.refineFacet} />
+            <FacetContainer foodType={foodType} starsCount={starsCount} handleFacet={this.refineFacet} />
           </Grid.Column>
           <Grid.Column width={8}>
             <List>

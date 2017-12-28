@@ -5,30 +5,27 @@ export default class FacetContainer extends Component {
   constructor(props){
     super(props)
     this.state = {
-      facets: [],
-      moreFacets: [],
+      starsData: [],
+      foodTypeData: [],
       active: ''
     }
   }
 
   componentWillReceiveProps(nextProps){
-    const { facets } = nextProps
-    let topFacets = facets.slice(0, 10)
-    console.log(facets, topFacets)
-    this.setState({facets: topFacets})
+    const { foodType } = nextProps
+    this.setState({foodTypeData: foodType})
   }
 
   setActive = (active) => {
-    this.setState({active: active}, this.props.handleFacet('food_type', active))
+    this.props.handleFacet('food_type', active)
   }
   render(){
-    const { facets, active } = this.state
-
+    const { active, foodTypeData } = this.state
     return(
       <Menu text vertical>
         <Menu.Item header>Cuisine/Food Type</Menu.Item>
           {
-            facets.map((f, i) => (
+            foodTypeData.map((f, i) => (
               <Menu.Item key={i} name={f.name} active={this.state.active === f.name} onClick={() => this.setActive(f.name)}>
                 <Label>{f.count}</Label>
                 { f.name }
