@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Menu, Label } from 'semantic-ui-react'
+import FoodType from '../../components/FoodType'
 
 export default class FacetContainer extends Component {
   constructor(props){
@@ -12,23 +13,32 @@ export default class FacetContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const { foodType } = nextProps
-    this.setState({foodTypeData: foodType})
+    const { foodType, starsCount } = nextProps
+    this.setState({
+      foodTypeData: foodType.slice(0, 11),
+      starsData: starsCount
+    })
   }
 
-  setActive = (active) => {
-    this.props.handleFacet('food_type', active)
+  addFacet = (facet, value) => {
+    this.props.handleFacet(facet, value)
   }
   render(){
-    const { active, foodTypeData } = this.state
+    const { active, foodTypeData, starsData } = this.state
+    const { handleFacet } = this.props
     return(
       <Menu text vertical>
         <Menu.Item header>Cuisine/Food Type</Menu.Item>
           {
             foodTypeData.map((f, i) => (
-              <Menu.Item key={i} name={f.name} active={this.state.active === f.name} onClick={() => this.setActive(f.name)}>
-                <Label>{f.count}</Label>
-                { f.name }
+              <FoodType key={f.id} addFacet={handleFacet} { ...f }/>
+            ))
+          }
+          <Menu.Item header>Rating</Menu.Item>
+          {
+            starsData.map(s => (
+              <Menu.Item key={s.id} onClick={() => handleFacet('stars_count', s.name)}>
+                {s.name}
               </Menu.Item>
             ))
           }

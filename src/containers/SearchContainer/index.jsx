@@ -46,8 +46,8 @@ export default class SearchContainer extends Component {
     this._helper.setQuery(target.value).search()
   }
 
-  refineFacet = (name, value) => {
-    this._helper.toggleRefinement(name, value).search()
+  refineFacet = (facet, value) => {
+    this._helper.toggleRefinement(facet, value).search()
   }
   render(){
     const { results, foodType, starsCount } = this.state
