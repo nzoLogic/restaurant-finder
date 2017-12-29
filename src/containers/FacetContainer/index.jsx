@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Menu, Label } from 'semantic-ui-react'
 import FoodType from '../../components/FoodType'
+import ReactStars from 'react-stars'
 
 export default class FacetContainer extends Component {
   constructor(props){
@@ -8,7 +9,8 @@ export default class FacetContainer extends Component {
     this.state = {
       starsData: [],
       foodTypeData: [],
-      active: ''
+      active: '',
+      starNumber: 1
     }
   }
 
@@ -20,9 +22,25 @@ export default class FacetContainer extends Component {
     })
   }
 
-  addFacet = (facet, value) => {
-    this.props.handleFacet(facet, value)
+  renderStars = () => {
+    const { handleStarsRefinement } = this.props
+    const stars = []
+
+    for(let i = 1; i < 6; i++){
+      stars.push(
+        <Menu.Item key={i} onClick={() => handleStarsRefinement(i)}>
+          <ReactStars
+            count={5}
+            edit={false}
+            value={i}
+            size={24}
+            color2={'#ffd700'} />
+        </Menu.Item>
+      )
+    }
+    return stars
   }
+
   render(){
     const { active, foodTypeData, starsData } = this.state
     const { handleFacet } = this.props
@@ -31,16 +49,12 @@ export default class FacetContainer extends Component {
         <Menu.Item header>Cuisine/Food Type</Menu.Item>
           {
             foodTypeData.map((f, i) => (
-              <FoodType key={f.id} addFacet={handleFacet} { ...f }/>
+              <FoodType key={i} addFacet={handleFacet} { ...f }/>
             ))
           }
           <Menu.Item header>Rating</Menu.Item>
           {
-            starsData.map(s => (
-              <Menu.Item key={s.id} onClick={() => handleFacet('stars_count', s.name)}>
-                {s.name}
-              </Menu.Item>
-            ))
+            this.renderStars()
           }
       </Menu>
     )

@@ -29,15 +29,20 @@ export default class SearchContainer extends Component {
       facets: ['food_type', 'stars_count']
     })
     this._helper.on('result', this.updateResults)
+    this._helper.on('change', () => {
+      console.log('CHANGE')
+    })
     console.log('HELPER ---> ', this._helper)
     this._helper.search()
   }
 
   updateResults(results){
+    console.log(this._helper)
     console.log(results)
     const foodType = results.getFacetValues('food_type')
     const starsCount = results.getFacetValues('stars_count')
-    console.log(foodType, starsCount)
+    // console.log('FOOD TYPE ---> ', foodType)
+    // console.log('STARS ---> ', starsCount)
     this.setState( {results: results.hits, foodType, starsCount} )
   }
 
@@ -49,6 +54,10 @@ export default class SearchContainer extends Component {
   refineFacet = (facet, value) => {
     this._helper.toggleRefinement(facet, value).search()
   }
+  refineStars = (value) => {
+    this._helper.removeNumericRefinement('stars_count', '>=')
+    this._helper.addNumericRefinement('stars_count', '>=', value).search()
+  }
   render(){
     const { results, foodType, starsCount } = this.state
 
@@ -59,7 +68,12 @@ export default class SearchContainer extends Component {
         </Grid.Row>
         <Grid.Row columns={12} divided>
           <Grid.Column width={4}>
-            <FacetContainer foodType={foodType} starsCount={starsCount} handleFacet={this.refineFacet} />
+            <FacetContainer
+              foodType={foodType}
+              starsCount={starsCount}
+              handleFacet={this.refineFacet}
+              handleStarsRefinement={this.refineStars}
+              />
           </Grid.Column>
           <Grid.Column width={8}>
             <List>
@@ -69,7 +83,6 @@ export default class SearchContainer extends Component {
                 </List.Item>
               )) }
             </List>
-
           </Grid.Column>
         </Grid.Row>
       </Grid>
