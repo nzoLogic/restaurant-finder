@@ -9,16 +9,18 @@ export default class FacetContainer extends Component {
     this.state = {
       starsData: [],
       foodTypeData: [],
+      paymentOptionsData: [],
       active: '',
       starNumber: 1
     }
   }
 
   componentWillReceiveProps(nextProps){
-    const { foodType, starsCount } = nextProps
+    const { foodType, starsCount, paymentOptions } = nextProps
     this.setState({
       foodTypeData: foodType.slice(0, 11),
-      starsData: starsCount
+      starsData: starsCount,
+      paymentOptionsData: paymentOptions
     })
   }
 
@@ -42,7 +44,7 @@ export default class FacetContainer extends Component {
   }
 
   render(){
-    const { active, foodTypeData, starsData } = this.state
+    const { active, foodTypeData, starsData, paymentOptionsData } = this.state
     const { handleFacet } = this.props
     return(
       <Menu text vertical>
@@ -55,6 +57,14 @@ export default class FacetContainer extends Component {
           <Menu.Item header>Rating</Menu.Item>
           {
             this.renderStars()
+          }
+          <Menu.Item header>Payment Options</Menu.Item>
+          {
+            paymentOptionsData.map((p, i) => (
+              <Menu.Item key={i} onClick={() => handleFacet('payment_options', p.name)}>
+                { p.name }
+              </Menu.Item>
+            ))
           }
       </Menu>
     )

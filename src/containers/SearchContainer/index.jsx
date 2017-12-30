@@ -17,6 +17,7 @@ export default class SearchContainer extends Component {
       results: [],
       foodType: [],
       starsCount: [],
+      paymentOptions: [],
       query: ''
     }
   }
@@ -26,24 +27,21 @@ export default class SearchContainer extends Component {
     const { location } = this.props
     this._helper = algoliasearchHelper(client, 'Restaurants', {
       aroundLatLng: location,
-      facets: ['food_type', 'stars_count']
+      facets: ['food_type', 'stars_count', 'payment_options']
     })
     this._helper.on('result', this.updateResults)
+    this._helper.clearRefinements((value, attr, type) => {})
     this._helper.on('change', () => {
       console.log('CHANGE')
     })
-    console.log('HELPER ---> ', this._helper)
     this._helper.search()
   }
 
   updateResults(results){
-    console.log(this._helper)
-    console.log(results)
     const foodType = results.getFacetValues('food_type')
     const starsCount = results.getFacetValues('stars_count')
-    // console.log('FOOD TYPE ---> ', foodType)
-    // console.log('STARS ---> ', starsCount)
-    this.setState( {results: results.hits, foodType, starsCount} )
+    const paymentOptions = results.getFacetValues('payment_options')
+    this.setState( {results: results.hits, foodType, starsCount, paymentOptions} )
   }
 
   handleInputChange({ target }){
@@ -59,7 +57,7 @@ export default class SearchContainer extends Component {
     this._helper.addNumericRefinement('stars_count', '>=', value).search()
   }
   render(){
-    const { results, foodType, starsCount } = this.state
+    const { results, foodType, starsCount, paymentOptions } = this.state
 
     return(
       <Grid container>
@@ -71,6 +69,7 @@ export default class SearchContainer extends Component {
             <FacetContainer
               foodType={foodType}
               starsCount={starsCount}
+              paymentOptions={paymentOptions}
               handleFacet={this.refineFacet}
               handleStarsRefinement={this.refineStars}
               />
