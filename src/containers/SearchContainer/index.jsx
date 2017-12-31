@@ -28,7 +28,7 @@ export default class SearchContainer extends Component {
     }
   }
 
-  componentWillMount(){
+  componentDidMount(){
     const client = algoliasearch('O5LZ0PKJ3M', '4b13c1dbc657b715100da47889eb9e8f')
     const { location } = this.props
     this._helper = algoliasearchHelper(client, 'Restaurants', {
@@ -41,6 +41,15 @@ export default class SearchContainer extends Component {
       console.log('CHANGE')
     })
     this._helper.search()
+  }
+
+  componentWillReceiveProps(nextProps){
+    const { location, locationPermission } = nextProps
+    console.log('receiving props... ', nextProps)
+
+    if( location  ){
+      this._helper.setQueryParameter('aroundLatLng', location).search()
+    }
   }
 
   updateResults(results){
