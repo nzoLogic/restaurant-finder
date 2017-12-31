@@ -46,7 +46,7 @@ export default class SearchContainer extends Component {
   updateResults(results){
     const foodType = results.getFacetValues('food_type')
     const starsCount = results.getFacetValues('stars_count')
-    const paymentOptions = results.getFacetValues('payment_options')
+    const paymentOptions = results.getFacetValues('payment_options').filter(v => v.name !== 'Carte Blanche' && v.name !== 'Diners Club')
     let pages = Math.floor(results.nbPages * 10)
     let searchTime = results.processingTimeMS * 0.001
     console.log(results)

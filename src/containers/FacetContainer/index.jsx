@@ -10,15 +10,16 @@ export default class FacetContainer extends Component {
       starsData: [],
       foodTypeData: [],
       paymentOptionsData: [],
-      active: '',
-      starNumber: 1
+      active: false,
+      starNumber: 1,
+      showAll: false
     }
   }
 
   componentWillReceiveProps(nextProps){
     const { foodType, starsCount, paymentOptions } = nextProps
     this.setState({
-      foodTypeData: foodType.slice(0, 11),
+      foodTypeData: foodType,
       starsData: starsCount,
       paymentOptionsData: paymentOptions
     })
@@ -42,18 +43,22 @@ export default class FacetContainer extends Component {
     }
     return stars
   }
-
+  toggleTypes = () => {
+    this.setState({showAll: !this.state.showAll})
+  }
   render(){
-    const { active, foodTypeData, starsData, paymentOptionsData } = this.state
+    const { active, foodTypeData, starsData, paymentOptionsData, showAll } = this.state
     const { handleFacet } = this.props
+    let foodType = showAll ? foodTypeData : foodTypeData.slice(0, 11)
     return(
       <Menu text vertical>
         <Menu.Item header>Cuisine/Food Type</Menu.Item>
           {
-            foodTypeData.map((f, i) => (
+            foodType.map((f, i) => (
               <FoodType key={i} addFacet={handleFacet} { ...f }/>
             ))
           }
+          <Menu.Item active color="blue" onClick={this.toggleTypes}>{`${showAll ? "Show less" : "Show more"}`}...</Menu.Item>
           <Menu.Item header>Rating</Menu.Item>
           {
             this.renderStars()
