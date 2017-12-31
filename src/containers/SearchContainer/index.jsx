@@ -3,8 +3,9 @@ import algoliasearch from 'algoliasearch'
 import algoliasearchHelper from 'algoliasearch-helper'
 import SearchComponent from '../../components/SearchComponent'
 import Results from '../../components/Results'
-import { Grid, List } from 'semantic-ui-react'
+import { Grid, List, Menu, Icon } from 'semantic-ui-react'
 import FacetContainer from '../FacetContainer'
+import Pagination from 'semantic-ui-react-button-pagination'
 
 export default class SearchContainer extends Component {
   constructor(props){
@@ -18,7 +19,10 @@ export default class SearchContainer extends Component {
       foodType: [],
       starsCount: [],
       paymentOptions: [],
-      query: ''
+      query: '',
+      pages: 0,
+      page: 0,
+      offset: 0
     }
   }
 
@@ -41,7 +45,9 @@ export default class SearchContainer extends Component {
     const foodType = results.getFacetValues('food_type')
     const starsCount = results.getFacetValues('stars_count')
     const paymentOptions = results.getFacetValues('payment_options')
-    this.setState( {results: results.hits, foodType, starsCount, paymentOptions} )
+    let pages = Math.floor(results.nbPages * 10)
+    console.log(results)
+    this.setState( {results: results.hits, foodType, starsCount, paymentOptions, pages} )
   }
 
   handleInputChange({ target }){
@@ -50,14 +56,23 @@ export default class SearchContainer extends Component {
   }
 
   refineFacet = (facet, value) => {
+    this.setState({offset: 0})
     this._helper.toggleRefinement(facet, value).search()
   }
   refineStars = (value) => {
+    this.setState({offset: 0})
     this._helper.removeNumericRefinement('stars_count', '>=')
     this._helper.addNumericRefinement('stars_count', '>=', value).search()
   }
+  handleClick(offset, page) {
+    let n = parseInt(page)
+    if(!isNaN(n)){
+      this._helper.setPage(n-1).search()
+    }
+  this.setState({offset});
+  }
   render(){
-    const { results, foodType, starsCount, paymentOptions } = this.state
+    const { results, foodType, starsCount, paymentOptions, page, pages } = this.state
 
     return(
       <Grid container>
@@ -82,6 +97,18 @@ export default class SearchContainer extends Component {
                 </List.Item>
               )) }
             </List>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column columns={12}>
+            <Pagination
+              fluid
+              offset={this.state.offset}
+              limit={10}
+              total={pages}
+              onClick={(e, props, offset) => this.handleClick(offset, props.children)}
+              />
+
           </Grid.Column>
         </Grid.Row>
       </Grid>
