@@ -10,9 +10,8 @@ export default class LocationRequestModal extends Component {
   }
 
   handleClose = (e) => {
-    const permission = e.target.dataset.permission
+    const permission = e.target.dataset.permission === 'true'
     const { handlePermission } = this.props
-    console.log(permission)
     this.setState({isOpen: false})
     handlePermission(permission)
   }
@@ -29,11 +28,11 @@ export default class LocationRequestModal extends Component {
         </Modal.Content>
 
         <Modal.Actions>
-          <Button negative color="red" onClick={this.handleClose} data-permission={false}>
+          <Button negative color="red" onClick={this.handleClose} data-permission='false'>
             <Icon name="close" />
             Maybe Later
           </Button>
-          <Button positive color="green" onClick={this.handleClose} data-permission={true}>
+          <Button positive color="green" onClick={this.handleClose} data-permission='true'>
             <Icon name='checkmark' />
             Accept
           </Button>

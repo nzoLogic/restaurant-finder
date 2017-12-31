@@ -15,7 +15,6 @@ export default class LocationContainer extends Component {
   componentWillMount(){
     let hasLocationPermission = localStorage.getItem('locationPermission')
     hasLocationPermission = JSON.parse(hasLocationPermission)
-
     if( hasLocationPermission  ){
       let location = localStorage.getItem('location')
       this.setState({locationPermission: true, geo: location}, this.getLocation)
@@ -29,6 +28,7 @@ export default class LocationContainer extends Component {
   waitToRequest = () => {
     setTimeout(() => this.setState({needsModal: true}), 2000)
   }
+
   checkNavigation(){
     if( "geolocation" in navigator ){
       this.getLocation()
@@ -47,6 +47,7 @@ export default class LocationContainer extends Component {
 
     console.log('Location geo', geo)
     localStorage.setItem('locationPermission', true)
+    localStorage.setItem('location', geo)
     this.setState( {geo: geo} )
   }
 
@@ -58,6 +59,7 @@ export default class LocationContainer extends Component {
     }
     this.setState({locationPermission: permission})
   }
+
   render(){
     const { geo, locationPermission, needsModal } = this.state
     return(
