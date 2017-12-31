@@ -1,26 +1,36 @@
 import React, { Component } from 'react'
 import SearchContainer from '../SearchContainer'
+import LocationRequestModal from '../../components/LocationRequestModal'
 
 export default class LocationContainer extends Component {
   constructor(props){
     super(props)
     this.state = {
-      geo: ''
+      geo: '',
+      locationPermission: false,
+      needsModal: false
     }
-    this.saveLocation = this.saveLocation.bind(this)
   }
 
   componentWillMount(){
-    let location = localStorage.getItem('location')
-    if( location ){
-      this.setState( {geo: location} )
+    let hasLocationPermission = localStorage.getItem('locationPermission')
+    hasLocationPermission = JSON.parse(hasLocationPermission)
+
+    if( hasLocationPermission  ){
+      let location = localStorage.getItem('location')
+      this.setState({locationPermission: true, geo: location}, this.getLocation)
+    } else if( hasLocationPermission === null ) {
+      this.waitToRequest()
     } else {
       this.checkNavigation()
     }
   }
 
+  waitToRequest = () => {
+    setTimeout(() => this.setState({needsModal: true}), 2000)
+  }
   checkNavigation(){
-    if("geolocation" in navigator){
+    if( "geolocation" in navigator ){
       this.getLocation()
     } else {
       console.log('geolcoation not available')
@@ -28,24 +38,34 @@ export default class LocationContainer extends Component {
   }
 
   getLocation(){
-    navigator.geolocation.getCurrentPosition(this.saveLocation)
+    navigator.geolocation.getCurrentPosition(this.handleLocation)
   }
 
-  saveLocation({ coords }){
+  handleLocation = ({ coords }) => {
     let { latitude, longitude } = coords
     let geo = `${latitude}, ${longitude}`
 
     console.log('Location geo', geo)
-    localStorage.setItem('location', geo)
+    localStorage.setItem('locationPermission', true)
     this.setState( {geo: geo} )
   }
+
+  handlePermission = permission => {
+    localStorage.setItem('locationPermission', permission)
+
+    if( permission ) {
+      this.checkNavigation()
+    }
+    this.setState({locationPermission: permission})
+  }
   render(){
-    const { geo } = this.state
+    const { geo, locationPermission, needsModal } = this.state
     return(
       <div>
         {
-          geo && <SearchContainer location={geo} />
+          needsModal && <LocationRequestModal handlePermission={this.handlePermission} />
         }
+        <SearchContainer location={geo} locationPermission={locationPermission} />
       </div>
     )
   }
