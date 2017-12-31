@@ -3,7 +3,7 @@ import algoliasearch from 'algoliasearch'
 import algoliasearchHelper from 'algoliasearch-helper'
 import SearchComponent from '../../components/SearchComponent'
 import Results from '../../components/Results'
-import { Grid, List, Menu, Icon, Container } from 'semantic-ui-react'
+import { Grid, List, Menu, Icon, Container, Header } from 'semantic-ui-react'
 import FacetContainer from '../FacetContainer'
 import Pagination from 'semantic-ui-react-button-pagination'
 
@@ -22,7 +22,9 @@ export default class SearchContainer extends Component {
       query: '',
       pages: 0,
       page: 0,
-      offset: 0
+      offset: 0,
+      totalHits: 0,
+      searchTime: 0
     }
   }
 
@@ -46,8 +48,9 @@ export default class SearchContainer extends Component {
     const starsCount = results.getFacetValues('stars_count')
     const paymentOptions = results.getFacetValues('payment_options')
     let pages = Math.floor(results.nbPages * 10)
+    let searchTime = results.processingTimeMS * 0.001
     console.log(results)
-    this.setState( {results: results.hits, foodType, starsCount, paymentOptions, pages} )
+    this.setState( {results: results.hits, totalHits: results.nbHits, searchTime, foodType, starsCount, paymentOptions, pages} )
   }
 
   handleInputChange({ target }){
@@ -72,7 +75,7 @@ export default class SearchContainer extends Component {
   this.setState({offset});
   }
   render(){
-    const { results, foodType, starsCount, paymentOptions, page, pages } = this.state
+    const { results, foodType, starsCount, paymentOptions, page, pages, totalHits, searchTime } = this.state
 
     return(
       <Grid>
@@ -91,6 +94,9 @@ export default class SearchContainer extends Component {
                 />
             </Grid.Column>
             <Grid.Column width={10}>
+              <Header as='h3' disabled>
+                <Header.Content>{totalHits} results found <span>in {searchTime} seconds</span></Header.Content>
+              </Header>
               <List>
                 { results.map(r => (
                   <List.Item key={r.objectID}>
