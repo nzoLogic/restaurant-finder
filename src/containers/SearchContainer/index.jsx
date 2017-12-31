@@ -3,7 +3,7 @@ import algoliasearch from 'algoliasearch'
 import algoliasearchHelper from 'algoliasearch-helper'
 import SearchComponent from '../../components/SearchComponent'
 import Results from '../../components/Results'
-import { Grid, List, Menu, Icon } from 'semantic-ui-react'
+import { Grid, List, Menu, Icon, Container } from 'semantic-ui-react'
 import FacetContainer from '../FacetContainer'
 import Pagination from 'semantic-ui-react-button-pagination'
 
@@ -75,42 +75,46 @@ export default class SearchContainer extends Component {
     const { results, foodType, starsCount, paymentOptions, page, pages } = this.state
 
     return(
-      <Grid container>
-        <Grid.Row columns={12}>
-          <SearchComponent action={this.handleInputChange} />
+      <Grid>
+        <Grid.Row style={{height: 102}}>
+            <SearchComponent action={this.handleInputChange} />
         </Grid.Row>
-        <Grid.Row columns={12} divided>
-          <Grid.Column width={4}>
-            <FacetContainer
-              foodType={foodType}
-              starsCount={starsCount}
-              paymentOptions={paymentOptions}
-              handleFacet={this.refineFacet}
-              handleStarsRefinement={this.refineStars}
-              />
-          </Grid.Column>
-          <Grid.Column width={8}>
-            <List>
-              { results.map(r => (
-                <List.Item key={r.objectID}>
-                  <Results { ...r } />
-                </List.Item>
-              )) }
-            </List>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column columns={12}>
-            <Pagination
-              fluid
-              offset={this.state.offset}
-              limit={10}
-              total={pages}
-              onClick={(e, props, offset) => this.handleClick(offset, props.children)}
-              />
+        <Grid container>
+          <Grid.Row divided>
+            <Grid.Column width={4}>
+              <FacetContainer
+                foodType={foodType}
+                starsCount={starsCount}
+                paymentOptions={paymentOptions}
+                handleFacet={this.refineFacet}
+                handleStarsRefinement={this.refineStars}
+                />
+            </Grid.Column>
+            <Grid.Column width={10}>
+              <List>
+                { results.map(r => (
+                  <List.Item key={r.objectID}>
+                    <Results { ...r } />
+                  </List.Item>
+                )) }
+              </List>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column columns={12}>
+              <Pagination
+                fluid
+                color="blue"
+                offset={this.state.offset}
+                limit={10}
+                total={pages}
+                onClick={(e, props, offset) => this.handleClick(offset, props.children)}
+                />
 
-          </Grid.Column>
-        </Grid.Row>
+            </Grid.Column>
+          </Grid.Row>
+
+        </Grid>
       </Grid>
     )
   }
