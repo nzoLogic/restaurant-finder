@@ -50,7 +50,7 @@ export default class SearchContainer extends Component {
     let pages = Math.floor(results.nbPages * 10)
     let searchTime = results.processingTimeMS * 0.001
     console.log(results)
-    this.setState( {results: results.hits, totalHits: results.nbHits, searchTime, foodType, starsCount, paymentOptions, pages} )
+    this.setState( {results: results.hits, totalHits: results.nbHits, query: results.query, searchTime, foodType, starsCount, paymentOptions, pages} )
   }
 
   handleInputChange({ target }){
@@ -75,7 +75,7 @@ export default class SearchContainer extends Component {
   this.setState({offset});
   }
   render(){
-    const { results, foodType, starsCount, paymentOptions, page, pages, totalHits, searchTime } = this.state
+    const { results, foodType, starsCount, paymentOptions, page, pages, totalHits, searchTime, query } = this.state
 
     return(
       <Grid>
@@ -95,7 +95,23 @@ export default class SearchContainer extends Component {
             </Grid.Column>
             <Grid.Column width={10}>
               <Header as='h3' disabled>
-                <Header.Content>{totalHits} results found <span>in {searchTime} seconds</span></Header.Content>
+                <Header.Content>
+                  {
+                    totalHits  ?
+                      <p>{totalHits} results found <span>in {searchTime} seconds</span></p>
+                        : query ?
+                        <div>
+                          <p>Your search {`"${query}"`}returned no results.</p>
+                          <strong>Try searching for restaurants by</strong>
+                          <ul>
+                            <li>Name</li>
+                            <li>City (e.g. "San Francisco")</li>
+                            <li>Type (e.g. "seafood")</li>
+                          </ul>
+                        </div> : null
+                  }
+
+                </Header.Content>
               </Header>
               <List>
                 { results.map(r => (
@@ -108,14 +124,17 @@ export default class SearchContainer extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column columns={12}>
-              <Pagination
-                fluid
-                color="blue"
-                offset={this.state.offset}
-                limit={10}
-                total={pages}
-                onClick={(e, props, offset) => this.handleClick(offset, props.children)}
-                />
+              {
+                results.length ?
+                <Pagination
+                  fluid
+                  color="blue"
+                  offset={this.state.offset}
+                  limit={10}
+                  total={pages}
+                  onClick={(e, props, offset) => this.handleClick(offset, props.children)}
+                  /> : null
+              }
 
             </Grid.Column>
           </Grid.Row>
