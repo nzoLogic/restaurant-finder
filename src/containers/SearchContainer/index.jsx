@@ -68,6 +68,7 @@ export default class SearchContainer extends Component {
   }
 
   refineFacet = (facet, value) => {
+    this.scrollUp()
     this.setState({offset: 0})
     this._helper.toggleRefinement(facet, value).search()
   }
@@ -83,6 +84,7 @@ export default class SearchContainer extends Component {
     }
   this.setState({offset});
   }
+  scrollUp = () => {document.body.scrollTop = document.documentElement.scrollTop = 0}
   render(){
     const { results, foodType, starsCount, paymentOptions, page, pages, totalHits, searchTime, query } = this.state
 
