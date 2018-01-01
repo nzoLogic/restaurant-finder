@@ -63,7 +63,6 @@ export default class SearchContainer extends Component {
   }
 
   handleInputChange({ target }){
-    console.log(target.value)
     this._helper.setQuery(target.value).search()
   }
 
