@@ -89,8 +89,10 @@ export default class SearchContainer extends Component {
 
     return(
       <Grid>
-        <Grid.Row style={{height: 102}}>
-            <SearchComponent action={this.handleInputChange} />
+        <Grid.Row style={{height: 102}} columns={2}>
+            <SearchComponent action={this.handleInputChange}
+              permission={this.props.locationPermission}
+              togglePermission={this.props.togglePermission}/>
         </Grid.Row>
         <Grid container>
           <Grid.Row divided>

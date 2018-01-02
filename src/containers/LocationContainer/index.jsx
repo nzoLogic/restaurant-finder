@@ -45,7 +45,6 @@ export default class LocationContainer extends Component {
     let { latitude, longitude } = coords
     let geo = `${latitude}, ${longitude}`
 
-    console.log('Location geo', geo)
     localStorage.setItem('locationPermission', true)
     localStorage.setItem('location', geo)
     this.setState( {geo: geo} )
@@ -60,6 +59,13 @@ export default class LocationContainer extends Component {
     this.setState({locationPermission: permission})
   }
 
+  togglePermission = () => {
+    const { locationPermission } = this.state
+    const nextPermission = !locationPermission
+    localStorage.setItem('locationPermission', nextPermission)
+    this.setState({locationPermission: nextPermission})
+  }
+
   render(){
     const { geo, locationPermission, needsModal } = this.state
     return(
@@ -67,7 +73,10 @@ export default class LocationContainer extends Component {
         {
           needsModal && <LocationRequestModal handlePermission={this.handlePermission} />
         }
-        <SearchContainer location={geo} locationPermission={locationPermission} />
+        <SearchContainer
+          location={geo}
+          togglePermission={this.togglePermission}
+          locationPermission={locationPermission} />
       </div>
     )
   }
