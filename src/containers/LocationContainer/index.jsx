@@ -26,7 +26,7 @@ export default class LocationContainer extends Component {
   }
 
   waitToRequest = () => {
-    setTimeout(() => this.setState({needsModal: true}), 2000)
+    setTimeout(() => this.setState({needsModal: true}), 5000)
   }
 
   checkNavigation(){

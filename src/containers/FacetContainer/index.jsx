@@ -65,7 +65,6 @@ export default class FacetContainer extends Component {
   }
   render(){
     const { activeFoodType, activePayment, foodTypeData, starsData, paymentOptionsData, showAll } = this.state
-    const { handleFacet } = this.props
     let foodType = showAll ? foodTypeData : foodTypeData.slice(0, 11)
     return(
       <Menu text vertical>

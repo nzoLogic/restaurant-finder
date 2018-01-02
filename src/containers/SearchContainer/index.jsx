@@ -3,7 +3,7 @@ import algoliasearch from 'algoliasearch'
 import algoliasearchHelper from 'algoliasearch-helper'
 import SearchComponent from '../../components/SearchComponent'
 import Results from '../../components/Results'
-import { Grid, List, Menu, Icon, Container, Header } from 'semantic-ui-react'
+import { Grid, List, Header } from 'semantic-ui-react'
 import FacetContainer from '../FacetContainer'
 import Pagination from 'semantic-ui-react-button-pagination'
 

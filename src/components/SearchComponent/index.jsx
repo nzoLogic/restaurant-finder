@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Container, Menu, Input, Label, Icon } from 'semantic-ui-react'
+import { Button, Container, Menu, Input } from 'semantic-ui-react'
 
 const SearchComponent = props => {
 
