@@ -21,10 +21,10 @@ export default class LocationRequestModal extends Component {
       <Modal size="small"
         open={this.state.isOpen}
         onClose={this.handleClose}>
-        <Modal.Header>Restaurant Finder</Modal.Header>
+        <Modal.Header>Allow Location Permissions</Modal.Header>
 
         <Modal.Content>
-          <Header>Improve your search results by searching for restaurants near you.</Header>
+          <Header>Improve your search results by allowing restaurant finder search for restaurants near your location.</Header>
         </Modal.Content>
 
         <Modal.Actions>
